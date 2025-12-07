@@ -1,0 +1,128 @@
+#########################################################
+# FLASK SERVER BEHAVIOR – DEVELOPMENT VS PRODUCTION
+# Project: flask-user-items-api
+# These notes explain what happens when you edit files
+# while the server is running in different environments.
+#########################################################
+
+
+=========================================================
+CASE 1: LOCAL DEVELOPMENT MODE (YOUR CURRENT MODE)
+=========================================================
+
+You are running the Flask app using:
+    flask run
+or
+    python run.py  (with debug=True)
+    
+Flask automatically switches to DEBUG MODE.
+
+WHAT DEBUG MODE DOES:
+----------------------
+
+1) AUTO-RELOAD ON FILE CHANGES
+   - When you edit ANY project file (.py)
+   - Flask detects the change
+   - Flask automatically restarts the server
+   - New code becomes active immediately
+
+   You will see:
+       "Detected change in ... restarting"
+
+2) ERROR DISPLAY
+   - If you make a mistake (syntax error, missing import)
+   - Flask shows full error message in console
+   - Fix the file → save → Flask reloads → app works again
+
+3) FAST DEVELOPMENT EXPERIENCE
+   - No need to stop/restart server manually
+   - Routes update instantly
+   - Debugger is available in browser if exception occurs
+
+FILES THAT TRIGGER AUTO-RELOAD:
+-------------------------------
+    app/routes/*.py
+    app/models.py
+    app/extensions.py
+    app/utils/*.py
+    app/__init__.py
+    run.py
+
+IMPORTANT:
+----------
+Editing models DOES NOT update the database automatically.
+You MUST run:
+    flask db migrate -m "changes"
+    flask db upgrade
+
+Stopping server:
+    CTRL + C
+
+
+=========================================================
+CASE 2: PRODUCTION MODE (Render / Gunicorn)
+=========================================================
+
+When running in production:
+
+    gunicorn run:app
+    (Render.com uses this automatically)
+
+PRODUCTION MODE RULES:
+----------------------
+
+1) NO AUTO-RELOAD
+   - Editing files locally does NOT update the server
+   - You must PUSH code to GitHub to deploy changes
+
+2) NO DEBUGGER
+   - Errors do not show stack trace in browser
+   - Debug mode is disabled for security
+
+3) DEPLOYMENT BEHAVIOR (Render.com)
+   - You push code → Render detects change
+   - Render rebuilds the service
+   - Render restarts your API with new code
+
+4) DATABASE MIGRATIONS DO NOT AUTO-RUN
+   - Editing models.py does nothing to production DB
+   - You must run:
+         flask db upgrade
+     inside Render shell (or using CI/CD)
+
+FILES THAT DO NOT AUTO-RELOAD IN PRODUCTION:
+--------------------------------------------
+    All files. Reload only on deployment.
+
+SUMMARY OF DIFFERENCES:
+------------------------
+| Action                     | Dev Mode | Prod Mode |
+|---------------------------|----------|-----------|
+| Edit a route file         | Auto Reload | No Reload |
+| Fix a bug                 | Auto Reload | Needs Redeploy |
+| Edit models.py            | Auto Reload | Needs Redeploy |
+| DB schema update          | Manual Migrate | Manual Migrate |
+| Debug messages            | Visible | Hidden |
+| What triggers restart     | File Save | Deployment |
+
+=========================================================
+QUICK SUMMARY
+=========================================================
+
+CASE 1 (Local):
+    ✔ Auto reload
+    ✔ Debug info
+    ✔ Instant feedback
+    ✔ Ideal for development
+
+CASE 2 (Production):
+    ✔ Controlled reload
+    ✔ Stable environment
+    ✔ Updates require deploy
+    ❌ No auto reload
+
+Use CASE 1 while coding, CASE 2 when deployed on Render.
+
+#########################################################
+# Save this as: docs/server-behavior-notes.txt
+#########################################################

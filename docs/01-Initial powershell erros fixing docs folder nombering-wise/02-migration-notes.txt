@@ -1,0 +1,168 @@
+#########################################
+# FLASK MIGRATIONS SETUP – FULL NOTES
+# Project: flask-user-items-api
+# This file explains ALL steps we did.
+#########################################
+
+
+----------------------------------------------------
+1. WHY WE CREATED THE FILE: app/__init__.py
+----------------------------------------------------
+- Flask uses an "application factory" pattern.
+- This means we have: app = create_app()
+- BUT Flask CLI (flask db migrate, run, shell) MUST know 
+  where the application object is.
+- Without app/__init__.py containing create_app(), Flask 
+  cannot import and build the application.
+
+ERROR WE SAW:
+ImportError: cannot import name 'create_app' from 'app'
+
+REASON:
+The file app/__init__.py was missing.
+
+FIX:
+We created app/__init__.py and added full working code that 
+defines create_app() and registers blueprints, extensions, etc.
+
+
+----------------------------------------------------
+2. WHY PATH: app/__init__.py IS IMPORTANT
+----------------------------------------------------
+Flask expects the application factory inside the app/ folder.
+This is a standard structure used by all real Flask projects.
+
+Correct path:
+flask-user-items-api/
+    app/
+        __init__.py   <-- REQUIRED
+        extensions.py
+        models.py
+        routes/
+        utils/
+    run.py
+
+If __init__.py is missing, Flask CANNOT load the app.
+
+
+----------------------------------------------------
+3. WHY WE USED THIS COMMAND:
+   $env:FLASK_APP="run.py"
+----------------------------------------------------
+This tells Flask CLI:
+"Use run.py as the entry point for the application."
+
+Flask will load run.py → run.py calls create_app() →
+Flask now correctly knows which app to work with.
+
+On Windows (Powershell):
+$env:FLASK_APP="run.py"
+
+On Linux/Mac:
+export FLASK_APP=run.py
+
+
+----------------------------------------------------
+4. COMMAND: flask db init
+----------------------------------------------------
+Creates the migrations/ folder.
+
+This folder contains Alembic configuration files:
+- env.py
+- script.py.mako
+- alembic.ini
+- versions/ (where migration scripts will live)
+
+This is the FIRST STEP in setting up migrations.
+
+
+----------------------------------------------------
+5. COMMAND: flask db migrate -m "initial"
+----------------------------------------------------
+- Flask compares your database schema with your models.
+- It detects differences.
+- It generates a migration file inside:
+
+migrations/versions/<revision>_initial.py
+
+In our case:
+979c4ca7eac5_initial.py
+
+What it detected:
+- New table: user
+- New table: item
+
+This does NOT apply the migration—it only CREATES the script.
+
+
+----------------------------------------------------
+6. COMMAND: flask db upgrade
+----------------------------------------------------
+- This EXECUTES the migration script.
+- Creates actual tables inside the database.
+- Applies all pending migrations.
+
+Output showed:
+Running upgrade -> 979c4ca7eac5, initial
+
+Meaning:
+✔ Migration applied successfully
+✔ DB schema is now created
+
+
+----------------------------------------------------
+7. WHAT IS THIS REVISION NUMBER: 979c4ca7eac5 ?
+----------------------------------------------------
+This is a unique migration ID (like a git commit ID).
+Every migration file gets its own random revision name.
+
+Example:
+979c4ca7eac5_initial.py      <- initial migration
+a1b2c3d4_add_column.py       <- next migration
+
+This allows Alembic to track database versions.
+
+
+----------------------------------------------------
+8. HOW TO RUN THE FLASK APP (LOCAL SERVER)
+----------------------------------------------------
+Start server:
+
+(venv) > flask run
+
+OR
+
+(venv) > python run.py
+
+
+----------------------------------------------------
+9. HOW TO STOP THE SERVER
+----------------------------------------------------
+Press:
+CTRL + C
+
+
+----------------------------------------------------
+10. HOW TO RE-RUN MIGRATIONS IN FUTURE
+----------------------------------------------------
+After updating models.py or adding new models:
+
+1. flask db migrate -m "your message"
+2. flask db upgrade
+
+This updates local DB.
+
+When deploying to Render:
+- You will run flask db upgrade inside Render console.
+
+
+----------------------------------------------------
+11. WHERE TO KEEP THIS NOTES FILE
+----------------------------------------------------
+Create folder:
+docs/
+
+Then save this file as:
+docs/migration-notes.txt
+
+This is clean and professional project documentation.

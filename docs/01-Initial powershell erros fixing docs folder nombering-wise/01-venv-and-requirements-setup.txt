@@ -1,0 +1,57 @@
+# ===============================================================
+#  PROJECT SETUP – CREATE & ACTIVATE VENV + INSTALL REQUIREMENTS
+#  File: 01-venv-and-requirements-setup.txt
+# ===============================================================
+
+# ---------------------------------------------------------------
+# 1. Navigate to the project directory
+#    Replace the path with your actual folder name.
+# ---------------------------------------------------------------
+PS D:\Projects Overview\2. Created Projects\flask-user-items-api>
+
+
+# ---------------------------------------------------------------
+# 2. Create a Python Virtual Environment (venv)
+#    This isolates project packages so system Python is untouched.
+# ---------------------------------------------------------------
+python -m venv venv
+
+
+# ---------------------------------------------------------------
+# 3. Activate the virtual environment
+#    After activation, "(venv)" will appear in your terminal.
+# ---------------------------------------------------------------
+venv\Scripts\activate
+
+
+# ---------------------------------------------------------------
+# 4. Install all required packages from requirements.txt
+#    This installs Flask, SQLAlchemy, JWT, CORS, etc.
+# ---------------------------------------------------------------
+pip install -r requirements.txt
+
+
+# ---------------------------------------------------------------
+# 5. (Optional but recommended)
+#    Upgrade pip inside the venv to avoid install issues.
+# ---------------------------------------------------------------
+python -m pip install --upgrade pip
+
+
+# ---------------------------------------------------------------
+# 6. Verify versions (optional)
+#    Ensures everything installed properly.
+# ---------------------------------------------------------------
+pip --version
+python --version
+flask --version
+
+
+# ---------------------------------------------------------------
+# 7. To deactivate the virtual environment (when you're done)
+# ---------------------------------------------------------------
+deactivate
+
+# ===============================================================
+# END OF FILE — READY FOR DOCUMENTATION
+# ===============================================================

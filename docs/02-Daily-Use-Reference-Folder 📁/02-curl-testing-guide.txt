@@ -1,0 +1,104 @@
+##############################################################
+# WINDOWS CMD - CURL TESTING COMMANDS (FINAL & CORRECT)
+# Project: flask-user-items-api
+# NOTE: These commands work ONLY in CMD (NOT PowerShell)
+##############################################################
+
+==============================================================
+1. HEALTH CHECK
+==============================================================
+curl -X GET "http://127.0.0.1:5000/auth/"
+
+==============================================================
+2. REGISTER USER
+==============================================================
+curl -X POST "http://127.0.0.1:5000/auth/register" ^
+-H "Content-Type: application/json" ^
+-d "{\"email\":\"test@example.com\", \"password\":\"123456\"}"
+
+==============================================================
+3. LOGIN AND GET TOKEN
+==============================================================
+curl -X POST "http://127.0.0.1:5000/auth/login" ^
+-H "Content-Type: application/json" ^
+-d "{\"email\":\"test@example.com\", \"password\":\"123456\"}"
+
+# After login output, copy ONLY the access_token value.
+# Example output:
+# { "access_token": "ABC123XYZ" }
+
+==============================================================
+4. SAVE TOKEN IN CMD
+==============================================================
+set token=PASTE_YOUR_TOKEN_HERE
+
+# Example:
+# set token=eyJhbGciOiJIUzI1NiIsInR...
+
+==============================================================
+5. CHECK PROFILE (REQUIRES TOKEN)
+==============================================================
+curl -X GET "http://127.0.0.1:5000/auth/profile" ^
+-H "Authorization: Bearer %token%"
+
+==============================================================
+6. UPDATE USER PROFILE (email/password)
+==============================================================
+curl -X PUT "http://127.0.0.1:5000/auth/profile" ^
+-H "Authorization: Bearer %token%" ^
+-H "Content-Type: application/json" ^
+-d "{\"email\":\"updated@example.com\", \"password\":\"newpass123\"}"
+
+==============================================================
+7. CHECK ITEMS LIST (INITIALLY EMPTY)
+==============================================================
+curl -X GET "http://127.0.0.1:5000/items/" ^
+-H "Authorization: Bearer %token%"
+
+==============================================================
+8. CREATE AN ITEM
+==============================================================
+curl -X POST "http://127.0.0.1:5000/items/" ^
+-H "Authorization: Bearer %token%" ^
+-H "Content-Type: application/json" ^
+-d "{\"name\":\"Laptop\", \"description\":\"Dell XPS\"}"
+
+==============================================================
+9. FETCH ALL ITEMS
+==============================================================
+curl -X GET "http://127.0.0.1:5000/items/" ^
+-H "Authorization: Bearer %token%"
+
+==============================================================
+10. UPDATE ITEM (USE CORRECT ID, e.g., 1)
+==============================================================
+curl -X PUT "http://127.0.0.1:5000/items/1" ^
+-H "Authorization: Bearer %token%" ^
+-H "Content-Type: application/json" ^
+-d "{\"name\":\"Laptop Updated\", \"description\":\"Updated Description\"}"
+
+==============================================================
+11. DELETE ITEM (USE CORRECT ID, e.g., 1)
+==============================================================
+curl -X DELETE "http://127.0.0.1:5000/items/1" ^
+-H "Authorization: Bearer %token%"
+
+==============================================================
+12. LOGOUT USER (TOKEN REVOCATION)
+==============================================================
+curl -X POST "http://127.0.0.1:5000/auth/logout" ^
+-H "Authorization: Bearer %token%"
+
+==============================================================
+13. REMOVE TOKEN LOCALLY
+==============================================================
+set token=
+
+==============================================================
+14. PROFILE AFTER LOGOUT (SHOULD FAIL)
+==============================================================
+curl -X GET "http://127.0.0.1:5000/auth/profile"
+
+##############################################################
+# END OF FILE
+##############################################################
