@@ -1,4 +1,5 @@
 # flask-user-items-api
+<<<<<<< HEAD
 
 A RESTful Flask API with:
 
@@ -12,3 +13,6 @@ A RESTful Flask API with:
 
 ## Run Locally
 
+=======
+flask-user-items-api
+>>>>>>> 5fae2b55af06ebf1cfff52ff7058ac68ff281d51
