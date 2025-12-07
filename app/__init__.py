@@ -1,18 +1,20 @@
 from flask import Flask, jsonify
 import os
-from .extensions import db, migrate, jwt, cors, token_blocklist
-from .routes.auth import auth_bp
-from .routes.items import items_bp
+
+from app.extensions import db, migrate, jwt, cors, token_blocklist
+from app.routes.auth import auth_bp
+from app.routes.items import items_bp
+
 
 def create_app():
     app = Flask(__name__)
 
-    # ------------------------------------
-    # DATABASE CONFIG (Neon / Render)
-    # ------------------------------------
+    # ----------------------------------------------------
+    # DATABASE CONFIG (Render + Neon PostgreSQL)
+    # ----------------------------------------------------
     db_url = os.getenv("DATABASE_URL", "sqlite:///local.db")
 
-    # Render/Neon sends `postgres://` but SQLAlchemy needs `postgresql://`
+    # Fix for Render/Neon: SQLAlchemy requires postgresql://
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://")
 
@@ -22,23 +24,35 @@ def create_app():
     # JWT Secret Key
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "supersecretkey")
 
-    # ------------------------------------
-    # Initialize Extensions
-    # ------------------------------------
+    # ----------------------------------------------------
+    # Initialize extensions
+    # ----------------------------------------------------
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
     cors.init_app(app)
 
-    # ------------------------------------
-    # Register Blueprints
-    # ------------------------------------
+    # ----------------------------------------------------
+    # Health Check Route
+    # ----------------------------------------------------
+    @app.route("/")
+    def health():
+        from datetime import datetime
+        return jsonify({
+            "message": "Flask User Items API is running!",
+            "status": "ok",
+            "current_time": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+        })
+
+    # ----------------------------------------------------
+    # Blueprints
+    # ----------------------------------------------------
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(items_bp, url_prefix="/items")
 
-    # ------------------------------------
+    # ----------------------------------------------------
     # JWT BLOCKLIST + ERROR HANDLERS
-    # ------------------------------------
+    # ----------------------------------------------------
     @jwt.token_in_blocklist_loader
     def check_if_token_revoked(jwt_header, jwt_payload):
         jti = jwt_payload.get("jti")
