@@ -1,0 +1,41 @@
+# ======================================================================
+#  GIT INITIAL SYNC & FIRST PUSH WORKFLOW
+#  File: 02-git-initial-sync-and-push.txt
+# ======================================================================
+
+# ----------------------------------------------------------------------
+# 1. Pull the latest code from remote main branch.
+#    --allow-unrelated-histories is required when:
+#       • Local project has its own commits
+#       • Remote main also has separate initial commits
+#       This flag merges both histories safely.
+# ----------------------------------------------------------------------
+git pull origin main --allow-unrelated-histories
+
+
+
+# ----------------------------------------------------------------------
+# 2. Add all project files to Git staging area.
+#    This prepares your local files for commit.
+# ----------------------------------------------------------------------
+git add .
+
+
+
+# ----------------------------------------------------------------------
+# 3. Commit your changes locally.
+#    Always add a meaningful commit message.
+# ----------------------------------------------------------------------
+git commit -m "Initial Flask User Items API setup"
+
+
+
+# ----------------------------------------------------------------------
+# 4. Push your committed changes to the remote main branch.
+#    After this, GitHub/Remote main branch will contain your project.
+# ----------------------------------------------------------------------
+git push origin main
+
+# ======================================================================
+#  END OF FILE — SAVE THIS FOR FUTURE REFERENCE
+# ======================================================================
