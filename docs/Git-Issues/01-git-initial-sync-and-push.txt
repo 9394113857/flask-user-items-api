@@ -1,41 +1,65 @@
 # ======================================================================
-#  GIT INITIAL SYNC & FIRST PUSH WORKFLOW
-#  File: 02-git-initial-sync-and-push.txt
+#  GIT INITIAL SYNC & FIRST PUSH WORKFLOW (FINAL VERSION)
+#  Project: flask-user-items-api
+#  Purpose:
+#     • Sync local project with GitHub remote main branch
+#     • Safely merge histories if both local and remote have commits
+#     • Push first version of project to GitHub
 # ======================================================================
+
 
 # ----------------------------------------------------------------------
 # 1. Pull the latest code from remote main branch.
-#    --allow-unrelated-histories is required when:
-#       • Local project has its own commits
-#       • Remote main also has separate initial commits
-#       This flag merges both histories safely.
+#    This step is REQUIRED when the GitHub repository is NOT empty.
+#
+#    The flag:
+#       --allow-unrelated-histories
+#    allows Git to merge your local project with GitHub’s initial commit.
+#
+#    Run this only ONCE at the beginning.
 # ----------------------------------------------------------------------
 git pull origin main --allow-unrelated-histories
 
 
 
 # ----------------------------------------------------------------------
-# 2. Add all project files to Git staging area.
-#    This prepares your local files for commit.
+# 2. Stage all local project files.
+#    This tells Git which files you want to include in your commit.
 # ----------------------------------------------------------------------
 git add .
 
 
 
 # ----------------------------------------------------------------------
-# 3. Commit your changes locally.
-#    Always add a meaningful commit message.
+# 3. Commit staged files to local repo.
+#    Use a meaningful commit message describing your change.
 # ----------------------------------------------------------------------
 git commit -m "Initial Flask User Items API setup"
 
 
 
 # ----------------------------------------------------------------------
-# 4. Push your committed changes to the remote main branch.
-#    After this, GitHub/Remote main branch will contain your project.
+# 4. Push your local main branch to GitHub.
+#    The --set-upstream flag links your local main with remote main.
+#
+#    After this step:
+#       • 'git push' and 'git pull' will work without extra arguments.
 # ----------------------------------------------------------------------
-git push origin main
+git push --set-upstream origin main
+
+
+
+# ----------------------------------------------------------------------
+# 5. Future pushes (AFTER first push)
+#    These commands are simpler because upstream is now set.
+# ----------------------------------------------------------------------
+# Push new changes
+git push
+
+# Pull latest changes
+git pull
+
 
 # ======================================================================
-#  END OF FILE — SAVE THIS FOR FUTURE REFERENCE
+#  END OF FILE — MASTER COPY FOR PROJECTS
 # ======================================================================
